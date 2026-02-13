@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import filedialog
 
 #fenetre 2 si on clique sur le bouton
 def cree_fenetre_conversion():
@@ -34,5 +35,21 @@ def cree_fenetre_conversion():
     fenetre2.attributes('-topmost', 1)
 
     #fenetre2.attributes('-alpha',1) #si je veut mettre en transparent
+
+    video_choisie : None # pour que ça ai un scope 
+
+    def open_file():
+        file_path = filedialog.askopenfilename(
+        title="Select a File",
+        filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")]
+        )
+        if file_path:
+            print("Selected File:", file_path)
+            video_choisie = open(file_path)
+            print(video_choisie) #a traiter plus tard
+    #a mettre dans un wrapeur pour que ça soit en haut à gauche
+    open_button = tk.Button(fenetre2, text="Open File", command=open_file)
+    open_button.pack(pady=10)
+    
     
     return fenetre2

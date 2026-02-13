@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 import fenetre2
+import tkinter as tk
+from tkinter import filedialog
 
 root = tk.Tk()
 root.title('Tkinter Window Demo')
@@ -90,8 +92,7 @@ download_button = ttk.Button(
     root,
     image=download_icon,
     text='Download',
-    compound=tk.LEFT,
-    command=None
+    compound=tk.LEFT
 )
 
 def gen_fenetre2():
@@ -153,7 +154,6 @@ label1.place(x=0,y=0,width=120, height=60)
 '''
 
 #pour ouvrir un fichier file_path = filedialog.askopenfilename(title="Select a File")
-
 
 
 root.mainloop()
