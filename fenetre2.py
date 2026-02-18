@@ -23,6 +23,10 @@ def prepare():
 def update_vitesse(event):
     print("vitesse : ", vitesse)
 
+def update_bitrate(event):
+    print("bitrate : ", vitesse)
+
+
 def update_X(event):
     print("X :", res_X)
 
@@ -87,7 +91,7 @@ def cree_fenetre_conversion():
             
     current_var_qualite_X = tk.StringVar()
     qualite_sortie_X = ttk.Combobox(fenetre2, textvariable=current_var_qualite_X)
-    current_value_X = current_var_qualite_X.get()
+    res_X = current_var_qualite_X.get()
     #res X
     qualite_sortie_X['values'] = ('144', '360', '480', '540', '720', '1080', '1440', '2160', '4320')
     qualite_sortie_X.bind('<<ComboboxSelected>>', update_X)# la fonction callback s'excecute si la valeur change par exemple
@@ -95,30 +99,49 @@ def cree_fenetre_conversion():
     
     current_var_qualite_Y = tk.StringVar()
     qualite_sortie_Y = ttk.Combobox(fenetre2, textvariable=current_var_qualite_Y)
-    current_value_Y = current_var_qualite_Y.get()
+    res_Y = current_var_qualite_Y.get()
     #res Y
     qualite_sortie_Y['values'] = ('256', '640', '848', '960', '1280', '1920', '2560', '3840', '7680')
     qualite_sortie_Y.bind('<<ComboboxSelected>>', update_Y)# la fonction callback s'excecute si la valeur change par exemple
     qualite_sortie_Y.pack()
     
     
+    #ratio ou pas
     garde_ratio = ttk.Checkbutton(
         fenetre2,
         command=update_ratio,
         text='<garder ratio>',
         variable=variable_format_fixe
     )
+    garde_ratio.pack()
+    
+    
+    
+    #bitrate
+    debit_voulu_var = tk.StringVar()
+    choix_debit_voulu = ttk.Combobox(fenetre2, textvariable=current_var_qualite_Y)
+    debit_voulu = debit_voulu_var.get()
+    choix_debit_voulu['values'] = ('1.5 Mbps', '4 Mbps', '7.5 Mbps', '12 Mbps', '24 Mbps', '35 Mbps', '100 Mbps')
+    choix_debit_voulu.bind('<<ComboboxSelected>>', update_Y)# la fonction callback s'excecute si la valeur change par exemple
+    choix_debit_voulu.pack()
+    
     
     #choix vitesse compression
     vitesse_liste = ('ultrafast', 'superfast', 'veryfast', 'faster', 'fast', 'medium', 'slow', 'slower', 'veryslow')
     list_variable = tk.Variable(value=vitesse_liste)
-    listbox = tk.Listbox(
+    listbox_bitrate = tk.Listbox(
         fenetre2,
         listvariable=list_variable,
         height=6
     )
-    listbox.pack(padx=10, pady=10, expand=True, fill=tk.BOTH, side=tk.LEFT)
-    listbox.bind('<<ListboxSelect>>', update_vitesse)
+    listbox_bitrate.pack(padx=10, pady=10, expand=True, fill=tk.BOTH, side=tk.LEFT)
+    listbox_bitrate.bind('<<ListboxSelect>>', update_bitrate)
+    
+    selection = listbox_bitrate.curselection()
+    
+    if selection:
+        vitesse = vitesse_liste[selection[0]]  #pour choper la valeur
+    
     
     
     
@@ -133,9 +156,13 @@ def cree_fenetre_conversion():
     else:
         btn.config(state='disabled')
     
-    
+    res_X = int(res_X)
     if (pret):
         #aac codec audio de base on peut changer comme libx264 changer res_Y en -2 si il connais pas bien setsar=1/1 pour pas que le codec la reforme si on la deforme
+        if(res_X %2 != 0):
+            res_X = res_X + 1 if res_X % 2 != 0 else res_X
+        if (garde_ratio):
+            res_Y = -2 # si on veut garde le ratio faut faire ça
         command = f"ffmpeg -i {video_source} -vf \"scale={res_X}:{res_Y}setsar=1/1\" -c:v libx264 -preset {vitesse} -b:v {debit_voulu} -c:a aac -b:a {bitrate_audio_voulu} {nom_sortie}.mp4"
         subprocess.run(command, shell=True) #pour appeler notre commande custom
 
