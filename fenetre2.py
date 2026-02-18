@@ -24,8 +24,10 @@ def update_vitesse(event):
     print("vitesse : ", vitesse)
 
 def update_bitrate(event):
-    print("bitrate : ", vitesse)
+    print("bitrate : ", debit_voulu)
 
+def update_bitrate_audio(event):
+    print("bitrate audio : ", bitrate_audio_voulu)
 
 def update_X(event):
     print("X :", res_X)
@@ -88,19 +90,22 @@ def cree_fenetre_conversion():
             video_choisie = open(file_path)
             video_source = file_path
             print(video_choisie) #a traiter plus tard
-            
+    
+    
+    #res X
     current_var_qualite_X = tk.StringVar()
     qualite_sortie_X = ttk.Combobox(fenetre2, textvariable=current_var_qualite_X)
     res_X = current_var_qualite_X.get()
-    #res X
     qualite_sortie_X['values'] = ('144', '360', '480', '540', '720', '1080', '1440', '2160', '4320')
     qualite_sortie_X.bind('<<ComboboxSelected>>', update_X)# la fonction callback s'excecute si la valeur change par exemple
     qualite_sortie_X.pack()
     
+    
+    
+    #res Y
     current_var_qualite_Y = tk.StringVar()
     qualite_sortie_Y = ttk.Combobox(fenetre2, textvariable=current_var_qualite_Y)
     res_Y = current_var_qualite_Y.get()
-    #res Y
     qualite_sortie_Y['values'] = ('256', '640', '848', '960', '1280', '1920', '2560', '3840', '7680')
     qualite_sortie_Y.bind('<<ComboboxSelected>>', update_Y)# la fonction callback s'excecute si la valeur change par exemple
     qualite_sortie_Y.pack()
@@ -122,8 +127,18 @@ def cree_fenetre_conversion():
     choix_debit_voulu = ttk.Combobox(fenetre2, textvariable=current_var_qualite_Y)
     debit_voulu = debit_voulu_var.get()
     choix_debit_voulu['values'] = ('1.5 Mbps', '4 Mbps', '7.5 Mbps', '12 Mbps', '24 Mbps', '35 Mbps', '100 Mbps')
-    choix_debit_voulu.bind('<<ComboboxSelected>>', update_Y)# la fonction callback s'excecute si la valeur change par exemple
+    choix_debit_voulu.bind('<<ComboboxSelected>>', update_bitrate)# la fonction callback s'excecute si la valeur change par exemple
     choix_debit_voulu.pack()
+    
+    
+    
+    #bitrate audio
+    bitrate_audio_voulu_var = tk.StringVar()
+    choix_bitrate_audio_voulu = ttk.Combobox(fenetre2, textvariable=current_var_qualite_Y)
+    bitrate_audio_voulu = bitrate_audio_voulu_var.get()
+    choix_bitrate_audio_voulu['values'] = ('8k', '64k', '128k', '192k', '256k', '320k', '1k')
+    choix_bitrate_audio_voulu.bind('<<ComboboxSelected>>', update_bitrate_audio)# la fonction callback s'excecute si la valeur change par exemple
+    choix_bitrate_audio_voulu.pack()
     
     
     #choix vitesse compression
@@ -139,11 +154,15 @@ def cree_fenetre_conversion():
     
     selection = listbox_bitrate.curselection()
     
+    vitesse = vitesse_liste[6]  #valeur par defaut
     if selection:
         vitesse = vitesse_liste[selection[0]]  #pour choper la valeur
     
     
-    
+    nom_sortie_var = tk.StringVar() # Entry liée à la variable 
+    nom_sortie_entre = tk.Entry(fenetre2, textvariable=nom_sortie_var)
+    nom_sortie = nom_sortie_var
+    nom_sortie_entre.pack()
     
     #a mettre dans un wrapeur pour que ça soit en haut à gauche
     open_button = tk.Button(fenetre2, text="Open File", command=open_file)
@@ -151,7 +170,7 @@ def cree_fenetre_conversion():
     
     btn = tk.Button(fenetre2, text="pret", command=prepare)
     
-    if((video_source != None) and (debit_voulu != None) and (nom_sortie != None)):
+    if((video_source != None) and (debit_voulu != None) and (nom_sortie != None) and (bitrate_audio_voulu != None)):
         btn.config(state='normal')
     else:
         btn.config(state='disabled')
@@ -163,6 +182,23 @@ def cree_fenetre_conversion():
             res_X = res_X + 1 if res_X % 2 != 0 else res_X
         if (garde_ratio):
             res_Y = -2 # si on veut garde le ratio faut faire ça
+        
+        #le debit faut le convertir de Mbps a Bps donc * 1 000 000
+        debit_voulu = float(debit_voulu.split()[0]) #extrait '1.5' pour convertir 1.5 en flotant
+        #print(debit_voulu_float) #debug
+        debit_voulu = debit_voulu * 1000000
+        
+        #pareil pour bitrate audio
+        bitrate_audio_voulu = float(bitrate_audio_voulu.replace(' k', ''))  #enleve le 'k'
+        
+        #securite des types
+        vitesse = str(vitesse)
+        res_X = int(res_X)
+        res_Y = int(res_Y)
+        debit_voulu = int(debit_voulu)
+        
+        bitrate_audio_voulu = int(bitrate_audio_voulu)
+        
         command = f"ffmpeg -i {video_source} -vf \"scale={res_X}:{res_Y}setsar=1/1\" -c:v libx264 -preset {vitesse} -b:v {debit_voulu} -c:a aac -b:a {bitrate_audio_voulu} {nom_sortie}.mp4"
         subprocess.run(command, shell=True) #pour appeler notre commande custom
 
