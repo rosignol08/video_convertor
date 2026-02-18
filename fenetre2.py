@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
+import json
 
 import subprocess
 
@@ -83,12 +84,11 @@ def cree_fenetre_conversion():
             print("Erreur: Format de débit vidéo invalide")
             return
         
-        # Convertir débit audio (de "192k" à nombre)
-        if "k" in bitrate_audio_voulu:
-            bitrate_audio_num = bitrate_audio_voulu.replace('k', '')
-        else:
+        # Valider format débit audio
+        if "k" not in bitrate_audio_voulu:
             print("Erreur: Format de débit audio invalide")
             return
+        bitrate_audio_num = bitrate_audio_voulu  # Garder le format "Xk" pour FFmpeg
         
         nom_sortie_final = nom_sortie_var.get()
         
@@ -99,6 +99,11 @@ def cree_fenetre_conversion():
         print(f"  Débit audio: {bitrate_audio_num}k")
         print(f"  Vitesse: {vitesse}")
         print(f"  Fichier sortie: {nom_sortie_final}.mp4")
+        
+        #parser ici
+        
+        #calcul poid final
+        #P = (debit_voulu_bps + bitrate_audio_num * T)
         
         command = f"ffmpeg -i \"{video_source}\" -vf \"scale={res_X_val}:{res_Y_val},setsar=1/1\" -c:v libx264 -preset {vitesse} -b:v {debit_voulu_bps} -c:a aac -b:a {bitrate_audio_num} \"{nom_sortie_final}.mp4\""
         print(f"\nCommande: {command}\n")
@@ -323,5 +328,26 @@ ffprobe -v error -show_entries format=duration,bit_rate,size -of json input.mp4
 
 pour la qualite
 ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 input.mp4
+ou alors 
 
+ffprobe -v error -select_streams v:0 -show_entries format=duration,bit_rate,size:stream=width,height -of json input.mp4 > metadata.json
+ça cree un parser du style :
+{
+    "programs": [],
+    "streams": [
+        {
+            "width": 1920,
+            "height": 1080
+        }
+    ],
+    "format": {
+        "duration": "120.450000",
+        "size": "15728640",
+        "bit_rate": "1044747"
+    }
+}
+TODO faire un parser pour recuperer les données
 '''
+with open('config.json', 'r') as f:
+    analyse = json.load(f)
+    duree = analyse["format"]["duration"]
