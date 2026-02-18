@@ -2,6 +2,11 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 
+import subprocess
+
+subprocess.run(["ls", "-l"]) #pour appeler notre commande custom
+
+
 #fenetre 2 si on clique sur le bouton
 def cree_fenetre_conversion():
     
