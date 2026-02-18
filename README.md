@@ -90,7 +90,7 @@ FFmpeg est un outil en ligne de commande extrêmement puissant mais difficile d'
    ```
 
 2. **Convertir une vidéo** :
-   - Cliquez sur le bouton "Download" dans la fenêtre principale
+   - Cliquez sur le bouton "Download" (Conversion) dans la fenêtre principale
    - Une nouvelle fenêtre s'ouvrira avec les options de conversion
    - Cliquez sur "Open File" pour sélectionner votre vidéo source
    - Configurez les paramètres :
@@ -212,7 +212,7 @@ FFmpeg is an extremely powerful command-line tool but difficult to access for no
    ```
 
 2. **Convert a video**:
-   - Click on the "Download" button in the main window
+   - Click on the "Download" (Conversion) button in the main window
    - A new window will open with conversion options
    - Click on "Open File" to select your source video
    - Configure the parameters:
