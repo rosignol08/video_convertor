@@ -160,5 +160,3 @@ root.mainloop()
 
 
 #"./assets/269091_video-camera-icon.png"
-
-
