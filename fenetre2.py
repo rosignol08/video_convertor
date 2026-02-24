@@ -23,8 +23,8 @@ vitesse = "slow"
 global debit_voulu
 debit_voulu = "4M"
 
-global bitrate_audio_voulu
-bitrate_audio_voulu = "192k"
+global debit_audio_voulu
+debit_audio_voulu = "192k"
 
 global nom_sortie
 nom_sortie = None
@@ -42,7 +42,7 @@ def cree_fenetre_conversion():
     #les call back
     
     def prepare():
-        global pret, res_X, res_Y, debit_voulu, bitrate_audio_voulu, nom_sortie, vitesse, format_fixe, video_source
+        global pret, res_X, res_Y, debit_voulu, debit_audio_voulu, nom_sortie, vitesse, format_fixe, video_source
         pret = True
         
         print("=== CONVERSION DÉMARRÉE ===")
@@ -63,7 +63,7 @@ def cree_fenetre_conversion():
         if not debit_voulu or debit_voulu == "":
             print("Erreur: Débit vidéo non sélectionné")
             return
-        if not bitrate_audio_voulu or bitrate_audio_voulu == "":
+        if not debit_audio_voulu or debit_audio_voulu == "":
             print("Erreur: Débit audio non sélectionné")
             return
         
@@ -85,10 +85,10 @@ def cree_fenetre_conversion():
             return
         
         # Valider format débit audio
-        if "k" not in bitrate_audio_voulu:
+        if "k" not in debit_audio_voulu:
             print("Erreur: Format de débit audio invalide")
             return
-        bitrate_audio_num = bitrate_audio_voulu  # Garder le format "Xk" pour FFmpeg
+        debit_audio_num = debit_audio_voulu  # Garder le format "Xk" pour FFmpeg
         
         nom_sortie_final = nom_sortie_var.get()
         
@@ -96,38 +96,38 @@ def cree_fenetre_conversion():
         print(f"  Fichier source: {video_source}")
         print(f"  Résolution: {res_X_val}x{res_Y_val}")
         print(f"  Débit vidéo: {debit_voulu_bps} bps")
-        print(f"  Débit audio: {bitrate_audio_num}k")
+        print(f"  Débit audio: {debit_audio_num}k")
         print(f"  Vitesse: {vitesse}")
         print(f"  Fichier sortie: {nom_sortie_final}.mp4")
         
         #parser ici
         
         #calcul poid final
-        #P = (debit_voulu_bps + bitrate_audio_num * T)
+        #P = (debit_voulu_bps + debit_audio_num * T)
         
-        command = f"ffmpeg -i \"{video_source}\" -vf \"scale={res_X_val}:{res_Y_val},setsar=1/1\" -c:v libx264 -preset {vitesse} -b:v {debit_voulu_bps} -c:a aac -b:a {bitrate_audio_num} \"{nom_sortie_final}.mp4\""
+        command = f"ffmpeg -i \"{video_source}\" -vf \"scale={res_X_val}:{res_Y_val},setsar=1/1\" -c:v libx264 -preset {vitesse} -b:v {debit_voulu_bps} -c:a aac -b:a {debit_audio_num} \"{nom_sortie_final}.mp4\""
         print(f"\nCommande: {command}\n")
         subprocess.run(command, shell=True)
         print("=== CONVERSION TERMINÉE ===")
 
     def update_vitesse(event):
         global vitesse
-        selection = listbox_bitrate.curselection()
+        selection = listbox_debit.curselection()
         vitesse = vitesse_liste[6]  #valeur par defaut
         if selection:
             vitesse = vitesse_liste[selection[0]]  #pour choper la valeur
     
         print("vitesse : ", vitesse)
 
-    def update_bitrate(event):
+    def update_debit(event):
         global debit_voulu
         debit_voulu = debit_voulu_var.get()
-        print("bitrate : ", debit_voulu)
+        print("debit : ", debit_voulu)
 
-    def update_bitrate_audio(event):
-        global bitrate_audio_voulu
-        bitrate_audio_voulu = bitrate_audio_voulu_var.get()
-        print("bitrate audio : ", bitrate_audio_voulu)
+    def update_debit_audio(event):
+        global debit_audio_voulu
+        debit_audio_voulu = debit_audio_voulu_var.get()
+        print("debit audio : ", debit_audio_voulu)
 
     def update_X(event):
         global res_X
@@ -229,10 +229,21 @@ def cree_fenetre_conversion():
     qualite_sortie_X.bind('<KeyRelease>', update_X)#si on sort de la boite d'ecriture
     qualite_sortie_X.bind('<FocusOut>', update_X)
     qualite_sortie_X.bind('<<ComboboxSelected>>', update_X)
+    
+    def on_qualite_sortie_X_focus_in(event):
+        if qualite_sortie_X.get() == "taper ou choisir":
+           qualite_sortie_X.delete(0, tk.END)
+
+    def on_qualite_sortie_X_focus_out(event):
+        if qualite_sortie_X.get() == "":
+            qualite_sortie_X.insert(0, "taper ou choisir")
+
     qualite_sortie_X.insert(0, "taper ou choisir")
+    qualite_sortie_X.bind('<FocusIn>', on_qualite_sortie_X_focus_in)
+    qualite_sortie_X.bind('<FocusOut>',on_qualite_sortie_X_focus_out)
     qualite_sortie_X.grid(column=6, row=4, sticky='nsew')
 
-    description_qualite_X = tk.Label(fenetre2, text="largeur d'image", font=font).grid(column=5, row=4, sticky='nsew')
+    description_qualite = tk.Label(fenetre2, text="largeur/hauteur image", font=font).grid(column=5, row=3, columnspan=2, sticky='nsew')
     
     
     #res Y
@@ -243,30 +254,39 @@ def cree_fenetre_conversion():
     qualite_sortie_Y.bind('<KeyRelease>', update_Y)#si on sort de la boite d'ecriture
     qualite_sortie_Y.bind('<FocusOut>', update_Y)
     qualite_sortie_Y.bind('<<ComboboxSelected>>', update_Y)# la fonction callback s'excecute si la valeur change par exemple
-    qualite_sortie_Y.insert(0, "taper ou choisir")
-    qualite_sortie_Y.grid(column=6, row=5, sticky='nsew')
     
-    description_qualite_Y = tk.Label(fenetre2, text="hauteur d'image", font=font).grid(column=5, row=5, sticky='nsew')
+    def on_qualite_sortie_Y_focus_in(event):
+        if qualite_sortie_Y.get() == "taper ou choisir":
+           qualite_sortie_Y.delete(0, tk.END)
+
+    def on_qualite_sortie_Y_focus_out(event):
+        if qualite_sortie_Y.get() == "":
+            qualite_sortie_Y.insert(0, "taper ou choisir")
+
+    qualite_sortie_Y.insert(0, "taper ou choisir")
+    qualite_sortie_Y.bind('<FocusIn>', on_qualite_sortie_Y_focus_in)
+    qualite_sortie_Y.bind('<FocusOut>',on_qualite_sortie_Y_focus_out)
+    qualite_sortie_Y.grid(column=6, row=5, sticky='nsew')
     
     #ratio ou pas
     garde_ratio = ttk.Checkbutton(
         fenetre2,
         command=lambda: update_ratio(variable_format_fixe),
-        text='<garder ratio>',
+        text='garder ratio',
         variable=variable_format_fixe
     )
-    garde_ratio.grid(column=4, row=5, sticky='nsew')
+    garde_ratio.grid(column=2, row=5, sticky='nsew')
     
     
     
-    #bitrate
+    #debit
     debit_voulu_var = tk.StringVar()
     choix_debit_voulu = ttk.Combobox(fenetre2, textvariable=debit_voulu_var)
     debit_voulu = debit_voulu_var.get()
     choix_debit_voulu['values'] = ('1.5 Mbps', '4 Mbps', '7.5 Mbps', '12 Mbps', '24 Mbps', '35 Mbps', '100 Mbps')
-    choix_debit_voulu.bind('<KeyRelease>', update_bitrate)#si on sort de la boite d'ecriture
-    choix_debit_voulu.bind('<FocusOut>', update_bitrate)
-    choix_debit_voulu.bind('<<ComboboxSelected>>', update_bitrate)# la fonction callback s'excecute si la valeur change par exemple
+    choix_debit_voulu.bind('<KeyRelease>', update_debit)#si on sort de la boite d'ecriture
+    choix_debit_voulu.bind('<FocusOut>', update_debit)
+    choix_debit_voulu.bind('<<ComboboxSelected>>', update_debit)# la fonction callback s'excecute si la valeur change par exemple
     def on_debit_focus_in(event):
         if choix_debit_voulu.get() == "taper ou choisir":
             choix_debit_voulu.delete(0, tk.END)
@@ -278,43 +298,50 @@ def cree_fenetre_conversion():
     choix_debit_voulu.insert(0, "taper ou choisir")
     choix_debit_voulu.bind('<FocusIn>', on_debit_focus_in)
     choix_debit_voulu.bind('<FocusOut>', on_debit_focus_out)
-    choix_debit_voulu.bind('<KeyRelease>', update_bitrate)
-    choix_debit_voulu.bind('<FocusOut>', update_bitrate)
-    choix_debit_voulu.bind('<<ComboboxSelected>>', update_bitrate)
-    choix_debit_voulu.grid(column=9, row=4, sticky='nsew')
     choix_debit_voulu.grid(column=9, row=4, sticky='nsew')
     
     
     
-    #bitrate audio
-    bitrate_audio_voulu_var = tk.StringVar()
-    choix_bitrate_audio_voulu = ttk.Combobox(fenetre2, textvariable=bitrate_audio_voulu_var)
-    bitrate_audio_voulu = bitrate_audio_voulu_var.get()
-    choix_bitrate_audio_voulu['values'] = ('8k', '64k', '128k', '192k', '256k', '320k', '1k')
-    choix_bitrate_audio_voulu.bind('<KeyRelease>', update_bitrate_audio)#si on sort de la boite d'ecriture
-    choix_bitrate_audio_voulu.bind('<FocusOut>', update_bitrate_audio) 
-    choix_bitrate_audio_voulu.bind('<<ComboboxSelected>>', update_bitrate_audio)# la fonction callback s'excecute si la valeur change par exemple
-    choix_bitrate_audio_voulu.insert(0, "taper ou choisir")
-    choix_bitrate_audio_voulu.grid(column=9, row=5, sticky='nsew')
+    #debit audio
+    debit_audio_voulu_var = tk.StringVar()
+    choix_debit_audio_voulu = ttk.Combobox(fenetre2, textvariable=debit_audio_voulu_var)
+    debit_audio_voulu = debit_audio_voulu_var.get()
+    choix_debit_audio_voulu['values'] = ('8k', '64k', '128k', '192k', '256k', '320k', '1k')
+    choix_debit_audio_voulu.bind('<KeyRelease>', update_debit_audio)#si on sort de la boite d'ecriture
+    choix_debit_audio_voulu.bind('<FocusOut>', update_debit_audio) 
+    choix_debit_audio_voulu.bind('<<ComboboxSelected>>', update_debit_audio)# la fonction callback s'excecute si la valeur change par exemple
+    
+    def on_debit_audio_focus_in(event):
+        if choix_debit_audio_voulu.get() == "taper ou choisir":
+            choix_debit_audio_voulu.delete(0, tk.END)
+
+    def on_debit_audio_focus_out(event):
+        if choix_debit_audio_voulu.get() == "":
+            choix_debit_audio_voulu.insert(0, "taper ou choisir")
+
+    choix_debit_audio_voulu.insert(0, "taper ou choisir")
+    choix_debit_audio_voulu.bind('<FocusIn>', on_debit_audio_focus_in)
+    choix_debit_audio_voulu.bind('<FocusOut>', on_debit_audio_focus_out)
+    
+    choix_debit_audio_voulu.grid(column=9, row=5, sticky='nsew')
     
     #description texte des nom des combox
-    description_bitrate_video = tk.Label(fenetre2, text="bitrate video", font=font).grid(column=8, row=4, sticky='nsew')
-    description_bitrate_audio = tk.Label(fenetre2, text="bitrate audio", font=font).grid(column=8, row=5, sticky='nsew')
+    description_debit = tk.Label(fenetre2, text="debit audio/video", font=font).grid(column=8, row=3, columnspan=2, sticky='nsew')
     
     #choix vitesse compression
     vitesse_liste = ('ultrafast', 'superfast', 'veryfast', 'faster', 'fast', 'medium', 'slow', 'slower', 'veryslow')
     list_variable = tk.Variable(value=vitesse_liste)
-    listbox_bitrate = tk.Listbox(
+    listbox_debit = tk.Listbox(
         fenetre2,
         listvariable=list_variable,
         height=6
     )
-    listbox_bitrate.grid(column=1, row=6, columnspan=2, sticky='nsew')#pack(padx=10, pady=10, expand=True, fill=tk.BOTH, side=tk.LEFT)
-    listbox_bitrate.bind('<KeyRelease>', update_vitesse)#si on sort de la boite d'ecriture
-    listbox_bitrate.bind('<FocusOut>', update_vitesse) 
-    listbox_bitrate.bind('<<ListboxSelect>>', update_vitesse)
+    listbox_debit.grid(column=1, row=6, columnspan=2, sticky='nsew')#pack(padx=10, pady=10, expand=True, fill=tk.BOTH, side=tk.LEFT)
+    listbox_debit.bind('<KeyRelease>', update_vitesse)#si on sort de la boite d'ecriture
+    listbox_debit.bind('<FocusOut>', update_vitesse) 
+    listbox_debit.bind('<<ListboxSelect>>', update_vitesse)
     
-    selection = listbox_bitrate.curselection()
+    selection = listbox_debit.curselection()
     #TODO implementer acceleration gpu
     vitesse = vitesse_liste[6]  #valeur par defaut
     if selection:
@@ -383,7 +410,7 @@ Le chiffre 8 sert à convertir les bits en octets.
 1k = 1000 bits/s
 
 ffprobe
-pour le bitrate
+pour le debit
 ffprobe -v error -show_entries format=duration,bit_rate,size -of json input.mp4
 
 pour la qualite
