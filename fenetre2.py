@@ -232,7 +232,7 @@ def cree_fenetre_conversion():
     qualite_sortie_X.insert(0, "taper ou choisir")
     qualite_sortie_X.grid(column=6, row=4, sticky='nsew')
 
-    description_qualite_X = tk.Label(fenetre2, text="largeur d'image", font=font).grid(column=5, row=6, sticky='nsew')
+    description_qualite_X = tk.Label(fenetre2, text="largeur d'image", font=font).grid(column=5, row=4, sticky='nsew')
     
     
     #res Y
