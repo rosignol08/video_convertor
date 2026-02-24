@@ -5,7 +5,7 @@ import tkinter as tk
 from tkinter import filedialog
 
 root = tk.Tk()
-root.title('Tkinter Window Demo')
+root.title('convertisseur de video')
 
 
 window_width = 300
@@ -19,6 +19,32 @@ screen_height = root.winfo_screenheight()
 center_x = int(screen_width/2 - window_width / 2)
 center_y = int(screen_height/2 - window_height / 2)
 
+#8 lignes
+root.grid_rowconfigure(0, weight=1)
+root.grid_rowconfigure(1, weight=1)
+root.grid_rowconfigure(2, weight=1)
+root.grid_rowconfigure(3, weight=1)
+root.grid_rowconfigure(4, weight=1)
+root.grid_rowconfigure(5, weight=1)
+root.grid_rowconfigure(6, weight=1)
+root.grid_rowconfigure(7, weight=1)
+
+#11 collones
+root.grid_columnconfigure(0, weight=1)
+root.grid_columnconfigure(1, weight=1)
+root.grid_columnconfigure(2, weight=1)
+root.grid_columnconfigure(3, weight=1)
+root.grid_columnconfigure(4, weight=1)
+root.grid_columnconfigure(5, weight=1)
+root.grid_columnconfigure(6, weight=1)
+root.grid_columnconfigure(7, weight=1)
+root.grid_columnconfigure(8, weight=1)
+root.grid_columnconfigure(9, weight=1)
+root.grid_columnconfigure(10, weight=1)
+
+#exemple :
+#button.grid(column=0, row=0, columnspan=3, rowspan=3)
+
 # set the position of the window to the center of the screen
 root.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
 
@@ -31,7 +57,7 @@ max_height = 600
 root.minsize(min_width, min_height)
 #root.maxsize(max_width, max_height)
 
-root.attributes('-topmost', 2)
+#root.attributes('-topmost', 2)
 
 root.attributes('-alpha',1) #si je veut mettre en transparent
 
@@ -61,21 +87,23 @@ exit_button = ttk.Button(
     text='Exit',
     command=lambda: root.quit()
 )
+exit_button.grid(column=1, row=7, columnspan=3, sticky='nsew')
 
-exit_button.pack(
-    ipadx=5,
-    ipady=5,
-    expand=True
-)
+
+#exit_button.pack(
+#    ipadx=5,
+#    ipady=5,
+#    expand=True
+#)
 
 def button_clicked():
     print('Button clicked')
 
 
-ttk.Button(root, text='Click Me',command=button_clicked)
+#ttk.Button(root, text='Click Me',command=button_clicked)
 
-button = ttk.Button(root, text='Click Me', command=button_clicked)
-button.pack()
+#button = ttk.Button(root, text='Click Me', command=button_clicked)
+#button.pack()
 
 '''bouton avec image pour telechargre la video'''
 
@@ -109,28 +137,23 @@ download_button.state(['disabled'])
 # remove the disabled flag
 download_button.state(['!disabled'])
 
-download_button.pack(
-    ipadx=5,
-    ipady=5,
-    expand=True
-)
+download_button.grid(column=3, row=3, columnspan=5, rowspan=2, sticky='nsew')
 
 
 
 def select(truc):
     print(truc)
 
-boutton_fonction = ttk.Button(root, text='Rock', command=lambda: select('Rock')).pack()
+#boutton_fonction = ttk.Button(root, text='Rock', command=lambda: select('Rock')).pack()
 
 
 font=("Helvetica", 14)
 
 
-message = tk.Label(root, text="Hello, World!", font=font)
-message.pack()
+message = tk.Label(root, text="compression de video", font=font).grid(column=3, row=1, columnspan=5, rowspan=2, sticky='nsew')
 
-message1 = tk.Label(root, text='Classic Label')
-message2 = ttk.Label(root, text='Themed Label')
+#message1 = tk.Label(root, text='Classic Label')
+#message2 = ttk.Label(root, text='Themed Label')
 
 #photo = tk.PhotoImage(file='./assets/MSI_MPG.png')
 #image_label = ttk.Label(
@@ -142,8 +165,8 @@ message2 = ttk.Label(root, text='Themed Label')
 #)
 #image_label.pack()
 
-message1.pack()
-message2.pack()
+#message1.pack()
+#message2.pack()
 
 
 '''pour placer des widget a certain endroits

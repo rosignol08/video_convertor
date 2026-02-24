@@ -166,6 +166,29 @@ def cree_fenetre_conversion():
     center_x = int(screen_width/2 - window_width / 2)
     center_y = int(screen_height/2 - window_height / 2)
 
+    #8 lignes
+    fenetre2.grid_rowconfigure(0, weight=1)
+    fenetre2.grid_rowconfigure(1, weight=1)
+    fenetre2.grid_rowconfigure(2, weight=1)
+    fenetre2.grid_rowconfigure(3, weight=1)
+    fenetre2.grid_rowconfigure(4, weight=1)
+    fenetre2.grid_rowconfigure(5, weight=1)
+    fenetre2.grid_rowconfigure(6, weight=1)
+    fenetre2.grid_rowconfigure(7, weight=1)
+    
+    #11 collones
+    fenetre2.grid_columnconfigure(0, weight=1)
+    fenetre2.grid_columnconfigure(1, weight=1)
+    fenetre2.grid_columnconfigure(2, weight=1)
+    fenetre2.grid_columnconfigure(3, weight=1)
+    fenetre2.grid_columnconfigure(4, weight=1)
+    fenetre2.grid_columnconfigure(5, weight=1)
+    fenetre2.grid_columnconfigure(6, weight=1)
+    fenetre2.grid_columnconfigure(7, weight=1)
+    fenetre2.grid_columnconfigure(8, weight=1)
+    fenetre2.grid_columnconfigure(9, weight=1)
+    fenetre2.grid_columnconfigure(10, weight=1)
+    
     # set the position of the window to the center of the screen
     fenetre2.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
 
@@ -178,7 +201,8 @@ def cree_fenetre_conversion():
     fenetre2.minsize(min_width, min_height)
     #root.maxsize(max_width, max_height)
 
-    fenetre2.attributes('-topmost', 1)
+    font=("Helvetica", 14)
+    #fenetre2.attributes('-topmost', 1)
 
     #fenetre2.attributes('-alpha',1) #si je veut mettre en transparent
 
@@ -205,8 +229,10 @@ def cree_fenetre_conversion():
     qualite_sortie_X.bind('<KeyRelease>', update_X)#si on sort de la boite d'ecriture
     qualite_sortie_X.bind('<FocusOut>', update_X)
     qualite_sortie_X.bind('<<ComboboxSelected>>', update_X)
-    qualite_sortie_X.pack()
-    
+    qualite_sortie_X.insert(0, "taper ou choisir")
+    qualite_sortie_X.grid(column=6, row=4, sticky='nsew')
+
+    description_qualite_X = tk.Label(fenetre2, text="largeur d'image", font=font).grid(column=5, row=6, sticky='nsew')
     
     
     #res Y
@@ -217,8 +243,10 @@ def cree_fenetre_conversion():
     qualite_sortie_Y.bind('<KeyRelease>', update_Y)#si on sort de la boite d'ecriture
     qualite_sortie_Y.bind('<FocusOut>', update_Y)
     qualite_sortie_Y.bind('<<ComboboxSelected>>', update_Y)# la fonction callback s'excecute si la valeur change par exemple
-    qualite_sortie_Y.pack()
+    qualite_sortie_Y.insert(0, "taper ou choisir")
+    qualite_sortie_Y.grid(column=6, row=5, sticky='nsew')
     
+    description_qualite_Y = tk.Label(fenetre2, text="hauteur d'image", font=font).grid(column=5, row=5, sticky='nsew')
     
     #ratio ou pas
     garde_ratio = ttk.Checkbutton(
@@ -227,7 +255,7 @@ def cree_fenetre_conversion():
         text='<garder ratio>',
         variable=variable_format_fixe
     )
-    garde_ratio.pack()
+    garde_ratio.grid(column=4, row=5, sticky='nsew')
     
     
     
@@ -239,7 +267,22 @@ def cree_fenetre_conversion():
     choix_debit_voulu.bind('<KeyRelease>', update_bitrate)#si on sort de la boite d'ecriture
     choix_debit_voulu.bind('<FocusOut>', update_bitrate)
     choix_debit_voulu.bind('<<ComboboxSelected>>', update_bitrate)# la fonction callback s'excecute si la valeur change par exemple
-    choix_debit_voulu.pack()
+    def on_debit_focus_in(event):
+        if choix_debit_voulu.get() == "taper ou choisir":
+            choix_debit_voulu.delete(0, tk.END)
+
+    def on_debit_focus_out(event):
+        if choix_debit_voulu.get() == "":
+            choix_debit_voulu.insert(0, "taper ou choisir")
+
+    choix_debit_voulu.insert(0, "taper ou choisir")
+    choix_debit_voulu.bind('<FocusIn>', on_debit_focus_in)
+    choix_debit_voulu.bind('<FocusOut>', on_debit_focus_out)
+    choix_debit_voulu.bind('<KeyRelease>', update_bitrate)
+    choix_debit_voulu.bind('<FocusOut>', update_bitrate)
+    choix_debit_voulu.bind('<<ComboboxSelected>>', update_bitrate)
+    choix_debit_voulu.grid(column=9, row=4, sticky='nsew')
+    choix_debit_voulu.grid(column=9, row=4, sticky='nsew')
     
     
     
@@ -251,8 +294,12 @@ def cree_fenetre_conversion():
     choix_bitrate_audio_voulu.bind('<KeyRelease>', update_bitrate_audio)#si on sort de la boite d'ecriture
     choix_bitrate_audio_voulu.bind('<FocusOut>', update_bitrate_audio) 
     choix_bitrate_audio_voulu.bind('<<ComboboxSelected>>', update_bitrate_audio)# la fonction callback s'excecute si la valeur change par exemple
-    choix_bitrate_audio_voulu.pack()
+    choix_bitrate_audio_voulu.insert(0, "taper ou choisir")
+    choix_bitrate_audio_voulu.grid(column=9, row=5, sticky='nsew')
     
+    #description texte des nom des combox
+    description_bitrate_video = tk.Label(fenetre2, text="bitrate video", font=font).grid(column=8, row=4, sticky='nsew')
+    description_bitrate_audio = tk.Label(fenetre2, text="bitrate audio", font=font).grid(column=8, row=5, sticky='nsew')
     
     #choix vitesse compression
     vitesse_liste = ('ultrafast', 'superfast', 'veryfast', 'faster', 'fast', 'medium', 'slow', 'slower', 'veryslow')
@@ -262,13 +309,13 @@ def cree_fenetre_conversion():
         listvariable=list_variable,
         height=6
     )
-    listbox_bitrate.pack(padx=10, pady=10, expand=True, fill=tk.BOTH, side=tk.LEFT)
+    listbox_bitrate.grid(column=1, row=6, columnspan=2, sticky='nsew')#pack(padx=10, pady=10, expand=True, fill=tk.BOTH, side=tk.LEFT)
     listbox_bitrate.bind('<KeyRelease>', update_vitesse)#si on sort de la boite d'ecriture
     listbox_bitrate.bind('<FocusOut>', update_vitesse) 
     listbox_bitrate.bind('<<ListboxSelect>>', update_vitesse)
     
     selection = listbox_bitrate.curselection()
-    
+    #TODO implementer acceleration gpu
     vitesse = vitesse_liste[6]  #valeur par defaut
     if selection:
         vitesse = vitesse_liste[selection[0]]  #pour choper la valeur
@@ -278,20 +325,33 @@ def cree_fenetre_conversion():
         global nom_sortie
         nom_sortie = nom_sortie_var.get()
         print("nom sortie :", nom_sortie)
+    #chat gpt wrote that###########
+    def on_focus_in(event):
+        if nom_sortie_entre.get() == "Nom du fichier de sortie":
+            nom_sortie_entre.delete(0, tk.END)
+            nom_sortie_entre.config(fg='black')
+
+    def on_focus_out(event):
+        if nom_sortie_entre.get() == "":
+            nom_sortie_entre.insert(0, "Nom du fichier de sortie")
+            nom_sortie_entre.config(fg='gray')
+    ###############################
     
     nom_sortie_var = tk.StringVar() # Entry liée à la variable 
     nom_sortie_entre = tk.Entry(fenetre2, textvariable=nom_sortie_var)
+    nom_sortie_entre.insert(0, "Nom du fichier de sortie")
+    nom_sortie_entre.config(fg='gray')
     nom_sortie = nom_sortie_var
+    nom_sortie_entre.bind('<FocusIn>', on_focus_in)
     nom_sortie_entre.bind('<KeyRelease>', update_nom_sortie)
-    nom_sortie_entre.bind('<FocusOut>', update_nom_sortie)
-    nom_sortie_entre.pack()
+    nom_sortie_entre.bind('<FocusOut>', on_focus_out)
+    nom_sortie_entre.grid(column=1, row=4, columnspan=2, sticky='nsew')
     
-    #a mettre dans un wrapeur pour que ça soit en haut à gauche
     open_button = tk.Button(fenetre2, text="Open File", command=open_file)
-    open_button.pack(pady=10)
+    open_button.grid(column=1, row=2, columnspan=2, sticky='nsew')
     
     btn = tk.Button(fenetre2, text="Démarrer la conversion", command=prepare, bg="green", fg="white")
-    btn.pack()
+    btn.grid(column=5, row=7, columnspan=2, sticky='nsew')
     
     return fenetre2
 
@@ -347,7 +407,7 @@ ffprobe -v error -select_streams v:0 -show_entries format=duration,bit_rate,size
     }
 }
 TODO faire un parser pour recuperer les données
-'''
 with open('config.json', 'r') as f:
     analyse = json.load(f)
     duree = analyse["format"]["duration"]
+'''
