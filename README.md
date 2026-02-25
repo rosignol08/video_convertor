@@ -58,7 +58,14 @@ FFmpeg est un outil en ligne de commande extrêmement puissant mais difficile d'
    sudo apt update
    sudo apt install ffmpeg
    ```
-   
+   **Linux (Fedora)** :
+   ```bash
+   sudo dnf install ffmpeg
+   ```
+   **Linux (Arch)** :
+   ```bash
+   sudo pacman -S ffmpeg
+   ```
    **macOS** :
    ```bash
    brew install ffmpeg
@@ -67,13 +74,14 @@ FFmpeg est un outil en ligne de commande extrêmement puissant mais difficile d'
    **Windows** :
    Téléchargez depuis [ffmpeg.org](https://ffmpeg.org/download.html) et ajoutez-le au PATH
 
-2. **Cloner le dépôt** :
+3. **Cloner le dépôt** :
    ```bash
    git clone https://github.com/rosignol08/video_convertor.git
    cd video_convertor
    ```
+   ou telecharger le bianaire en release
 
-3. **Vérifier l'installation de Python** :
+4. **Vérifier l'installation de Python** :
    ```bash
    python --version
    # ou
