@@ -1,4 +1,4 @@
-# 🎬 Video Convertor
+# Video Convertor
 
 <div align="center">
 
@@ -17,30 +17,30 @@
 
 ## Français
 
-### 📋 Description
+### Description
 
 **Video Convertor** est une interface graphique moderne et professionnelle pour FFmpeg, conçue pour simplifier la conversion et le traitement vidéo. Cette application permet aux utilisateurs de bénéficier de toute la puissance de FFmpeg sans avoir à mémoriser des lignes de commande complexes.
 
 FFmpeg est un outil en ligne de commande extrêmement puissant mais difficile d'accès pour les utilisateurs non techniques. Video Convertor comble cette lacune en offrant une interface intuitive qui génère automatiquement les commandes FFmpeg appropriées en fonction de vos besoins.
 
-### ✨ Fonctionnalités
+### Fonctionnalités
 
-- 🎯 **Interface utilisateur intuitive** : Interface tkinter moderne et facile à utiliser
-- 🎞️ **Conversion vidéo professionnelle** : Contrôle total sur les paramètres de conversion
-- 📐 **Gestion de la résolution** : 
+- **Interface utilisateur intuitive** : Interface tkinter moderne et facile à utiliser
+- **Conversion vidéo professionnelle** : Contrôle total sur les paramètres de conversion
+- **Gestion de la résolution** : 
   - Sélection de résolution personnalisée (X et Y)
   - Option de maintien du ratio d'aspect
   - Résolutions prédéfinies (144p à 8K)
-- 🎚️ **Contrôle du débit binaire** :
+- **Contrôle du débit binaire** :
   - Débit vidéo réglable (1.5 Mbps à 100 Mbps)
   - Débit audio configurable (8k à 320k)
-- ⚡ **Presets de vitesse** : Du plus rapide (ultrafast) au plus lent (veryslow) pour optimiser qualité/temps
-- 🎨 **Support des codecs modernes** :
+- **Presets de vitesse** : Du plus rapide (ultrafast) au plus lent (veryslow) pour optimiser qualité/temps
+- **Support des codecs modernes** :
   - Vidéo : libx264 (H.264)
   - Audio : AAC
-- 💾 **Export MP4** : Format de sortie optimisé pour une compatibilité maximale
+- **Export MP4** : Format de sortie optimisé pour une compatibilité maximale
 
-### 🔧 Prérequis
+### Prérequis
 
 - Python 3.x
 - FFmpeg installé sur votre système
@@ -49,7 +49,7 @@ FFmpeg est un outil en ligne de commande extrêmement puissant mais difficile d'
   - subprocess (bibliothèque standard)
   - json (bibliothèque standard)
 
-### 📦 Installation
+### Installation
 
 1. **Installer FFmpeg** :
    
@@ -88,7 +88,7 @@ FFmpeg est un outil en ligne de commande extrêmement puissant mais difficile d'
    python3 --version
    ```
 
-### 🚀 Utilisation
+### Utilisation
 
 1. **Lancer l'application** :
    ```bash
@@ -114,7 +114,7 @@ FFmpeg est un outil en ligne de commande extrêmement puissant mais difficile d'
    - La vidéo convertie sera enregistrée dans le même répertoire que l'application
    - Le nom du fichier sera celui que vous avez spécifié avec l'extension .mp4
 
-### 🎓 Commandes FFmpeg générées
+### Commandes FFmpeg générées
 
 L'application génère des commandes FFmpeg de la forme :
 ```bash
@@ -135,11 +135,11 @@ Cette commande :
 - Configure le débit binaire vidéo et audio
 - Encode l'audio en AAC
 
-### 📄 Licence
+### Licence
 
 Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
 
-### 🤝 Contribution
+### Contribution
 
 Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou une pull request.
 
@@ -147,30 +147,30 @@ Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou un
 
 ## English
 
-### 📋 Description
+### Description
 
 **Video Convertor** is a modern and professional graphical user interface for FFmpeg, designed to simplify video conversion and processing. This application allows users to harness the full power of FFmpeg without having to memorize complex command-line syntax.
 
 FFmpeg is an extremely powerful command-line tool but difficult to access for non-technical users. Video Convertor bridges this gap by providing an intuitive interface that automatically generates the appropriate FFmpeg commands based on your needs.
 
-### ✨ Features
+### Features
 
-- 🎯 **Intuitive user interface**: Modern and easy-to-use tkinter interface
-- 🎞️ **Professional video conversion**: Full control over conversion parameters
-- 📐 **Resolution management**:
+- **Intuitive user interface**: Modern and easy-to-use tkinter interface
+- **Professional video conversion**: Full control over conversion parameters
+- **Resolution management**:
   - Custom resolution selection (X and Y)
   - Aspect ratio preservation option
   - Predefined resolutions (144p to 8K)
-- 🎚️ **Bitrate control**:
+- **Bitrate control**:
   - Adjustable video bitrate (1.5 Mbps to 100 Mbps)
   - Configurable audio bitrate (8k to 320k)
-- ⚡ **Speed presets**: From fastest (ultrafast) to slowest (veryslow) to optimize quality/time
-- 🎨 **Modern codec support**:
+- **Speed presets**: From fastest (ultrafast) to slowest (veryslow) to optimize quality/time
+- **Modern codec support**:
   - Video: libx264 (H.264)
   - Audio: AAC
-- 💾 **MP4 export**: Optimized output format for maximum compatibility
+- **MP4 export**: Optimized output format for maximum compatibility
 
-### 🔧 Prerequisites
+### Prerequisites
 
 - Python 3.x
 - FFmpeg installed on your system
@@ -179,7 +179,7 @@ FFmpeg is an extremely powerful command-line tool but difficult to access for no
   - subprocess (standard library)
   - json (standard library)
 
-### 📦 Installation
+### Installation
 
 1. **Install FFmpeg**:
    
@@ -210,7 +210,7 @@ FFmpeg is an extremely powerful command-line tool but difficult to access for no
    python3 --version
    ```
 
-### 🚀 Usage
+### Usage
 
 1. **Launch the application**:
    ```bash
@@ -236,7 +236,7 @@ FFmpeg is an extremely powerful command-line tool but difficult to access for no
    - The converted video will be saved in the same directory as the application
    - The file name will be what you specified with a .mp4 extension
 
-### 🎓 Generated FFmpeg commands
+### Generated FFmpeg commands
 
 The application generates FFmpeg commands in this form:
 ```bash
@@ -257,11 +257,11 @@ This command:
 - Configures video and audio bitrate
 - Encodes audio to AAC
 
-### 📄 License
+### License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-### 🤝 Contributing
+### Contributing
 
 Contributions are welcome! Feel free to open an issue or pull request.
 
@@ -269,7 +269,7 @@ Contributions are welcome! Feel free to open an issue or pull request.
 
 <div align="center">
 
-**Made with ❤️ and FFmpeg**
+**Made with ❤️ FFmpeg and python**
 
 [Report Bug](https://github.com/rosignol08/video_convertor/issues) • [Request Feature](https://github.com/rosignol08/video_convertor/issues)
 
