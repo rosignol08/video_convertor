@@ -1,0 +1,16 @@
+{
+    "programs": [
+
+    ],
+    "streams": [
+        {
+            "width": 480,
+            "height": 270
+        }
+    ],
+    "format": {
+        "duration": "6.765700",
+        "size": "431043",
+        "bit_rate": "509680"
+    }
+}

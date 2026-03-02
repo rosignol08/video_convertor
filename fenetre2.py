@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 import json
+import os
 
 import subprocess
 
@@ -35,7 +36,22 @@ res_X = None
 global res_Y
 res_Y = None
 
+global qualite_calcul, debit_video_calcul, longueur_calcul, taille;
+qualite_calcul = None
+debit_video_calcul = None
+longueur_calcul = None
+taille = None
 
+def calcul_taille_initiale(chemin_video_complet):
+    #chemin_video_complet avec extention et chemin complet
+    commande_recuperation = f'ffprobe -v error -select_streams v:0 -show_entries format=duration,bit_rate,size:stream=width,height -of json "{chemin_video_complet}" > metadata.json'
+    print(f"\nCommande: {commande_recuperation}\n")
+    subprocess.run(commande_recuperation, shell=True)
+    with open('config.json', 'r') as f:
+        analyse = json.load(f)
+        longueur_calcul = analyse["format"]["duration"]
+        qualite_calcul = analyse["streams"]["width"]
+        
 
 #fenetre 2 si on clique sur le bouton
 def cree_fenetre_conversion():
@@ -212,13 +228,17 @@ def cree_fenetre_conversion():
         global video_choisie, video_source
         file_path = filedialog.askopenfilename(
         title="Select a File",
-        filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")]
+        filetypes=[("Video Files", "*.mp4"), ("All Files", "*.*")]
         )
         if file_path:
             print("Selected File:", file_path)
             video_choisie = open(file_path)
             video_source = file_path
-            print(video_choisie) #a traiter plus tard
+            nom_video = os.path.basename(video_source)
+            print("choix:", nom_video)
+            calcul_taille_initiale(video_source)#ça renseigne les info de la video de base
+            #faire un bool true ici pour dire qu'on peut extraire les info de la video
+            #ffprobe -v error -select_streams v:0 -show_entries format=duration,bit_rate,size:stream=width,height -of json input.mp4 > metadata.json
     
     
     #res X
