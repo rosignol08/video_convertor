@@ -2,15 +2,17 @@
     "programs": [
 
     ],
+    "stream_groups": [
+
+    ],
     "streams": [
         {
-            "width": 480,
-            "height": 270
+            "width": 1920,
+            "height": 1080
         }
     ],
     "format": {
-        "duration": "6.765700",
-        "size": "431043",
-        "bit_rate": "509680"
+        "duration": "14.866633",
+        "size": "16545277"
     }
 }

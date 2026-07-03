@@ -55,124 +55,14 @@ def calcul_taille_initiale(chemin_video_complet):
 
 #fenetre 2 si on clique sur le bouton
 def cree_fenetre_conversion():
-    #les call back
-    
-    def prepare():
-        global pret, res_X, res_Y, debit_voulu, debit_audio_voulu, nom_sortie, vitesse, format_fixe, video_source
-        pret = True
-        
-        print("=== CONVERSION DÉMARRÉE ===")
-        
-        # Validation
-        if video_source is None:
-            print("Erreur: Aucun fichier vidéo sélectionné")
-            return
-        if nom_sortie_var.get() == "":
-            print("Erreur: Nom de fichier de sortie vide")
-            return
-        if not res_X or res_X == "":
-            print("Erreur: Résolution X non définie")
-            return
-        if not res_Y or res_Y == "":
-            print("Erreur: Résolution Y non définie")
-            return
-        if not debit_voulu or debit_voulu == "":
-            print("Erreur: Débit vidéo non sélectionné")
-            return
-        if not debit_audio_voulu or debit_audio_voulu == "":
-            print("Erreur: Débit audio non sélectionné")
-            return
-        
-        # Récupérer valeurs actuelles
-        res_X_val = int(res_X)
-        res_Y_val = int(res_Y) if not variable_format_fixe.get() else -2
-        
-        # Ajuster res_X si impair
-        if res_X_val % 2 != 0:
-            res_X_val = res_X_val + 1
-            print(f"Résolution X ajustée de {res_X} à {res_X_val} (doit être pair)")
-        
-        # Convertir le débit vidéo (de "1.5 Mbps" à bits/s)
-        if "Mbps" in debit_voulu or "mbps" in debit_voulu:
-            debit_voulu_float = float(debit_voulu.split()[0])
-            debit_voulu_bps = int(debit_voulu_float * 1000000)
-        else:
-            print("Erreur: Format de débit vidéo invalide")
-            return
-        
-        # Valider format débit audio
-        if "k" not in debit_audio_voulu:
-            print("Erreur: Format de débit audio invalide")
-            return
-        debit_audio_num = debit_audio_voulu  # Garder le format "Xk" pour FFmpeg
-        
-        nom_sortie_final = nom_sortie_var.get()
-        
-        print(f"Configuration:")
-        print(f"  Fichier source: {video_source}")
-        print(f"  Résolution: {res_X_val}x{res_Y_val}")
-        print(f"  Débit vidéo: {debit_voulu_bps} bps")
-        print(f"  Débit audio: {debit_audio_num}k")
-        print(f"  Vitesse: {vitesse}")
-        print(f"  Fichier sortie: {nom_sortie_final}.mp4")
-        
-        #parser ici
-        
-        #calcul poid final
-        #P = (debit_voulu_bps + debit_audio_num * T)
-        
-        command = f"ffmpeg -i \"{video_source}\" -vf \"scale={res_X_val}:{res_Y_val},setsar=1/1\" -c:v libx264 -preset {vitesse} -b:v {debit_voulu_bps} -c:a aac -b:a {debit_audio_num} \"{nom_sortie_final}.mp4\""
-        print(f"\nCommande: {command}\n")
-        subprocess.run(command, shell=True)
-        print("=== CONVERSION TERMINÉE ===")
-
-    def update_vitesse(event):
-        global vitesse
-        selection = listbox_debit.curselection()
-        vitesse = vitesse_liste[6]  #valeur par defaut
-        if selection:
-            vitesse = vitesse_liste[selection[0]]  #pour choper la valeur
-    
-        print("vitesse : ", vitesse)
-
-    def update_debit(event):
-        global debit_voulu
-        debit_voulu = debit_voulu_var.get()
-        print("debit : ", debit_voulu)
-
-    def update_debit_audio(event):
-        global debit_audio_voulu
-        debit_audio_voulu = debit_audio_voulu_var.get()
-        print("debit audio : ", debit_audio_voulu)
-
-    def update_X(event):
-        global res_X
-        print("=== CALLBACK DÉCLENCHÉ ===")  # Pour vérifier l'exécution
-        res_X = current_var_qualite_X.get()
-        print("X :", res_X)
-        print("Valeur globale res_X:", res_X)
-
-
-    def update_Y(event):
-        global res_Y
-        res_Y = current_var_qualite_Y.get()
-        print("Y :", res_Y)
-
-    def update_ratio(variable_format_fixe):
-        if (variable_format_fixe.get()):
-            format_fixe = True
-            print("format fixé")
-        else:
-            format_fixe = False
-            print("format pas fixé")
 
     global video_source
     
     fenetre2 = tk.Toplevel()
-    fenetre2.title('conversion')
+    fenetre2.title('Conversion Vidéo')
 
-    window_width = 600
-    window_height = 500
+    window_width = 800
+    window_height = 600
 
     # get the screen dimension
     screen_width = fenetre2.winfo_screenwidth()
@@ -183,39 +73,23 @@ def cree_fenetre_conversion():
     center_y = int(screen_height/2 - window_height / 2)
 
     #8 lignes
-    fenetre2.grid_rowconfigure(0, weight=1)
-    fenetre2.grid_rowconfigure(1, weight=1)
-    fenetre2.grid_rowconfigure(2, weight=1)
-    fenetre2.grid_rowconfigure(3, weight=1)
-    fenetre2.grid_rowconfigure(4, weight=1)
-    fenetre2.grid_rowconfigure(5, weight=1)
-    fenetre2.grid_rowconfigure(6, weight=1)
-    fenetre2.grid_rowconfigure(7, weight=1)
-    
+    for i in range(8):
+        fenetre2.grid_rowconfigure(i, weight=1)
     #11 collones
-    fenetre2.grid_columnconfigure(0, weight=1)
-    fenetre2.grid_columnconfigure(1, weight=1)
-    fenetre2.grid_columnconfigure(2, weight=1)
-    fenetre2.grid_columnconfigure(3, weight=1)
-    fenetre2.grid_columnconfigure(4, weight=1)
-    fenetre2.grid_columnconfigure(5, weight=1)
-    fenetre2.grid_columnconfigure(6, weight=1)
-    fenetre2.grid_columnconfigure(7, weight=1)
-    fenetre2.grid_columnconfigure(8, weight=1)
-    fenetre2.grid_columnconfigure(9, weight=1)
-    fenetre2.grid_columnconfigure(10, weight=1)
     
-    # set the position of the window to the center of the screen
+    for i in range(11):
+        fenetre2.grid_columnconfigure(i, weight=1)
+    
+    #la position de la fenetre au centre de l'ecrant
     fenetre2.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
 
     fenetre2.resizable(True, True)
-    min_width = 200
-    min_height = 200
-    max_width = 600
-    max_height = 600
+    min_width = 600
+    min_height = 400
+    #max_width = 600
+    #max_height = 600
 
     fenetre2.minsize(min_width, min_height)
-    #root.maxsize(max_width, max_height)
 
     font=("Helvetica", 14)
     #fenetre2.attributes('-topmost', 1)
@@ -223,19 +97,170 @@ def cree_fenetre_conversion():
     #fenetre2.attributes('-alpha',1) #si je veut mettre en transparent
 
     variable_format_fixe = tk.BooleanVar()
+    
+    def print_terminal(message):
+        terminal.insert(tk.END, message + "\n")
+        terminal.see(tk.END) # Scroll automatique vers le bas
+        fenetre2.update() # Force l'interface à se rafraîchir
 
+    #Fonction de calcul mise à jour et intégrée ---
+    def calcul_taille_initiale(chemin_video_complet):
+        # On utilise > metadata.json
+        commande_recuperation = f'ffprobe -v error -select_streams v:0 -show_entries format=duration,size:stream=width,height -of json "{chemin_video_complet}" > metadata.json'
+        print_terminal(f"> {commande_recuperation}")
+        
+        subprocess.run(commande_recuperation, shell=True)
+        
+        try:
+            # Correction : on lit metadata.json et pas config.json
+            with open('metadata.json', 'r') as f:
+                analyse = json.load(f)
+                
+                # Extraction avec sécurisation au cas où une info manque
+                duree = float(analyse.get("format", {}).get("duration", 0))
+                taille_octets = int(analyse.get("format", {}).get("size", 0))
+                taille_mo = taille_octets / (1024 * 1024)
+                
+                streams = analyse.get("streams", [{}])
+                largeur = streams[0].get("width", "N/A") if streams else "N/A"
+                hauteur = streams[0].get("height", "N/A") if streams else "N/A"
+                nom_fichier = os.path.basename(chemin_video_complet)
+
+                # Mise à jour du texte d'information
+                info_texte = f"Nom : {nom_fichier}\nRésolution : {largeur}x{hauteur}\nTaille : {taille_mo:.2f} Mo\nDurée : {duree:.2f} s"
+                info_video_var.set(info_texte)
+                print_terminal(f"Succès : Informations de {nom_fichier} récupérées.")
+                
+        except Exception as e:
+            info_video_var.set("Erreur lors de la lecture des métadonnées.")
+            print_terminal(f"Erreur JSON : {e}")
+    
+    
+        #les call back
+    
+    def prepare():
+        global pret, res_X, res_Y, debit_voulu, debit_audio_voulu, nom_sortie, vitesse, format_fixe, video_source
+        pret = True
+        
+        print_terminal("=== CONVERSION DÉMARRÉE ===")
+        
+        # Validation
+        if video_source is None:
+            print_terminal("Erreur: Aucun fichier vidéo sélectionné")
+            return
+        if nom_sortie_var.get() == "":
+            print_terminal("Erreur: Nom de fichier de sortie vide")
+            return
+        #res_X_val = int(res_X) if res_X and res_X.isdigit() else 1920
+        #res_Y_val = int(res_Y) if not variable_format_fixe.get() and res_Y and res_Y.isdigit() else -2
+        
+        res_X_actuel = current_var_qualite_X.get()
+        res_Y_actuel = current_var_qualite_Y.get()
+        debit_video_actuel = debit_voulu_var.get().upper()
+        debit_audio_actuel = debit_audio_voulu_var.get().lower()
+        
+        res_X_val = int(res_X_actuel) if res_X_actuel and res_X_actuel.isdigit() else 1920
+        res_Y_val = int(res_Y_actuel) if not variable_format_fixe.get() and res_Y_actuel.isdigit() else -2
+        
+        if res_X_val % 2 != 0:
+            res_X_val += 1
+            print_terminal(f"Résolution X ajustée à {res_X_val} (doit être pair)")
+        if "MBPS" in debit_video_actuel:
+            debit_voulu_float = float(debit_video_actuel.replace(" MBPS", "").replace("MBPS", ""))
+            debit_voulu_bps = int(debit_voulu_float * 1000000)
+        elif "M" in debit_video_actuel:
+            debit_voulu_float = float(debit_video_actuel.replace("M", "").strip())
+            debit_voulu_bps = int(debit_voulu_float * 1000000)
+        elif debit_video_actuel.strip().isdigit(): # S'il tape juste "100"
+            debit_voulu_bps = int(debit_video_actuel.strip()) * 1000000
+        else:
+            print_terminal("Format de débit vidéo non reconnu, application de 4 Mbps par défaut.")
+            debit_voulu_bps = 4000000
+        #valider format débit audio
+        if "k" not in debit_audio_actuel:
+            debit_audio_actuel += "k" # Ajoute le k si oublié
+            
+        selection_v = listbox_debit.curselection()
+        vitesse_actuelle = vitesse_liste[selection_v[0]] if selection_v else "slow"
+        
+        debit_audio_num = debit_audio_actuel  # Garder le format "Xk" pour FFmpeg
+        
+        nom_sortie_final = nom_sortie_var.get()
+        
+        print(f"Configuration:")
+        print(f"  Fichier source: {video_source}")
+        print(f"  Résolution: {res_X_val}x{res_Y_val}")
+        print(f"  Débit vidéo: {debit_voulu_bps} bps")
+        print(f"  Débit audio: {debit_audio_num}")
+        print(f"  Vitesse: {vitesse_actuelle}")
+        print(f"  Fichier sortie: {nom_sortie_final}.mp4")
+        
+        #parser ici
+        
+        #calcul poid final
+        #P = (debit_voulu_bps + debit_audio_num * T)
+        chemin_sortie = os.path.join(os.path.dirname(video_source), f"{nom_sortie_final}.mp4")
+        command = f"ffmpeg -i \"{video_source}\" -vf \"scale={res_X_val}:{res_Y_val},setsar=1/1\" -c:v libx264 -preset {vitesse} -b:v {debit_voulu_bps} -c:a aac -b:a {debit_audio_num} -y \"{chemin_sortie}\""
+        print_terminal(f"Commande en cours d'exécution...")
+        print_terminal(command)
+        process = subprocess.run(command, shell=True, capture_output=True, text=True)
+        if process.returncode == 0:
+            print_terminal("\n=== CONVERSION TERMINÉE AVEC SUCCÈS ===")
+        else:
+            print_terminal(f"\n=== ERREUR ===\n{process.stderr}")
+
+    def update_vitesse(event):
+        #global vitesse
+        selection = listbox_debit.curselection()
+        #vitesse = vitesse_liste[6]  #valeur par defaut
+        if selection:
+            #vitesse = vitesse_liste[selection[0]]  #pour choper la valeur
+            print_terminal(f"Vitesse sélectionnée : {vitesse_liste[selection[0]]}")
+    
+    def update_debit(event):
+        global debit_voulu
+        debit_voulu = debit_voulu_var.get()
+        print_terminal(f"debit : {debit_voulu}")
+
+    def update_debit_audio(event):
+        global debit_audio_voulu
+        debit_audio_voulu = debit_audio_voulu_var.get()
+        #print("debit audio : ", debit_audio_voulu)
+
+    def update_X(event):
+        global res_X
+        #print("=== CALLBACK DÉCLENCHÉ ===")  # Pour vérifier l'exécution
+        res_X = current_var_qualite_X.get()
+        #print("X :", res_X)
+        #print("Valeur globale res_X:", res_X)
+
+
+    def update_Y(event):
+        global res_Y
+        res_Y = current_var_qualite_Y.get()
+        #print("Y :", res_Y)
+
+    def update_ratio(variable_format_fixe):
+        if (variable_format_fixe.get()):
+            format_fixe = True
+            #print("format fixé")
+        else:
+            format_fixe = False
+            #print("format pas fixé")
+    
     def open_file():
         global video_choisie, video_source
         file_path = filedialog.askopenfilename(
-        title="Select a File",
-        filetypes=[("Video Files", "*.mp4"), ("All Files", "*.*")]
+            title="Choix du fichier",
+            filetypes=[("Vidéo", "*.mp4"), ("Autre", "*.*")]
         )
         if file_path:
-            print("Selected File:", file_path)
+            #print("Selected File:", file_path)
             video_choisie = open(file_path)
             video_source = file_path
-            nom_video = os.path.basename(video_source)
-            print("choix:", nom_video)
+            #nom_video = os.path.basename(video_source)
+            print_terminal(f"Fichier sélectionné : {os.path.basename(video_source)}")
+            #print("choix:", nom_video)
             calcul_taille_initiale(video_source)#ça renseigne les info de la video de base
             #faire un bool true ici pour dire qu'on peut extraire les info de la video
             #ffprobe -v error -select_streams v:0 -show_entries format=duration,bit_rate,size:stream=width,height -of json input.mp4 > metadata.json
@@ -362,6 +387,14 @@ def cree_fenetre_conversion():
     listbox_debit.bind('<<ListboxSelect>>', update_vitesse)
     
     selection = listbox_debit.curselection()
+    
+    terminal = tk.Text(fenetre2, bg="black", fg="#00FF00", font=("Consolas", 9), wrap="word")
+    # On le place de la colonne 4 à 10 pour qu'il prenne toute la largeur restante
+    terminal.grid(column=4, row=6, columnspan=6, rowspan=2, sticky='nsew', padx=10, pady=10)
+    
+    # Petit message de bienvenue dans le terminal
+    print_terminal("Terminal prêt. En attente d'instructions...")
+    
     #TODO implementer acceleration gpu
     vitesse = vitesse_liste[6]  #valeur par defaut
     if selection:
@@ -395,10 +428,16 @@ def cree_fenetre_conversion():
     nom_sortie_entre.grid(column=1, row=4, columnspan=2, sticky='nsew')
     
     open_button = tk.Button(fenetre2, text="Open File", command=open_file)
-    open_button.grid(column=1, row=2, columnspan=2, sticky='nsew')
+    open_button.grid(column=1, row=2, columnspan=2, sticky='nsew', padx=5, pady=5)
+    
+    info_video_var = tk.StringVar()
+    info_video_var.set("Aucune vidéo sélectionnée\nEn attente...\n\n")
+    info_label = tk.Label(fenetre2, textvariable=info_video_var, justify="left", font=("Helvetica", 10), bg="#f0f0f0", relief="sunken")
+    # On le place à la colonne 4, sur plusieurs colonnes pour qu'il ait de la place
+    info_label.grid(column=4, row=2, columnspan=4, sticky='nsew', padx=10, pady=5)
     
     btn = tk.Button(fenetre2, text="Démarrer la conversion", command=prepare, bg="green", fg="white")
-    btn.grid(column=5, row=7, columnspan=2, sticky='nsew')
+    btn.grid(column=8, row=2, columnspan=2, sticky='nsew')
     
     return fenetre2
 
@@ -454,7 +493,7 @@ ffprobe -v error -select_streams v:0 -show_entries format=duration,bit_rate,size
     }
 }
 TODO faire un parser pour recuperer les données
-with open('config.json', 'r') as f:
+with open('metadata.json', 'r') as f:
     analyse = json.load(f)
     duree = analyse["format"]["duration"]
 '''
